@@ -132,15 +132,26 @@ controller.hears(['what is my name', 'who am i'], 'direct_message,direct_mention
                             {
                                 pattern: 'yes',
                                 callback: function(response, convo) {
-                                    // since no further messages are queued after this,
-                                    // the conversation will end naturally with status == 'completed'
+                                    // since no further messages are queued
+									// after
+									// this,
+                                    // the conversation will end naturally with
+									// status
+									// ==
+									// 'completed'
                                     convo.next();
                                 }
                             },
                             {
                                 pattern: 'no',
                                 callback: function(response, convo) {
-                                    // stop the conversation. this will cause it to end with status == 'stopped'
+                                    // stop the conversation. this will cause it
+									// to
+									// end
+									// with
+									// status
+									// ==
+									// 'stopped'
                                     convo.stop();
                                 }
                             },
@@ -155,7 +166,9 @@ controller.hears(['what is my name', 'who am i'], 'direct_message,direct_mention
 
                         convo.next();
 
-                    }, {'key': 'nickname'}); // store the results in a field called nickname
+                    }, {'key': 'nickname'}); // store the results in a field
+												// called
+												// nickname
 
                     convo.on('end', function(convo) {
                         if (convo.status == 'completed') {
@@ -176,7 +189,9 @@ controller.hears(['what is my name', 'who am i'], 'direct_message,direct_mention
 
 
                         } else {
-                            // this happens if the conversation ended prematurely for some reason
+                            // this happens if the conversation ended
+							// prematurely for some
+							// reason
                             bot.reply(message, 'OK, nevermind!');
                         }
                     });
@@ -226,6 +241,66 @@ controller.hears(['uptime', 'identify yourself', 'who are you', 'what is your na
              '>. I have been running for ' + uptime + ' on ' + hostname + '.');
 
     });
+
+controller.hears(['hvordan går det?'],
+	    'direct_message,direct_mention,mention', function(bot, message) {
+
+	        var hostname = os.hostname();
+	        var uptime = formatUptime(process.uptime());
+
+	        bot.reply(message,
+	            'Jeg har det fint!');
+
+	    });
+
+controller.hears(['hva koster medlemsskap'], 'ambient,direct_message,direct_mention,mention', function(bot, message) {
+    bot.reply(message, 'Medlemsskap er ikke nødvendig for å være på Bitraf, men det vil gi deg egen elektronisk nøkkel. Medlemsskap i Bitraf koster 300 for støttemedlemmer og 500 for vanlige medlemmer :)');
+
+});
+
+controller.hears(['hvordan(.*)tilgang(.*)tredje etasje(.*)\\?'], 'ambient,direct_message,direct_mention,mention', function(bot, message) {
+    bot.reply(message, 'Bruk innvendig trapp mellom 2. og 3. etasje :)');
+
+});
+
+controller.hears(['hvordan(.*)lagringsplass(.*)\\?', '(.*)hvordan(.*)lagringsplass(.*)\\?', 'hvordan(.*)lagringsplass\\?', '(.*) lagre prosjekter'], 'ambient,direct_message,direct_mention,mention', function(bot, message) {
+    bot.reply(message, 'Lagringsplass på Bitraf: Kjøp deg en passende boks på Clas Ohlson, og plassèr i rommet mellom kjøkken og kjøleskap :)');
+
+});
+
+controller.hears(['bitraf(.*)bitraf24(.*)\\?','bitraf24(.*)bitraf(.*)\\?'], 'ambient,direct_message,direct_mention,mention', function(bot, message) {
+    bot.reply(message, 'Forskjellen på Bitraf og Bitraf24 i wifi: Jeg vet ikke, finn ut og sett inn svaret her');
+
+});
+
+controller.hears(['(.*)Link Error\\?','(.*)link error\\?'], 'ambient,direct_message,direct_mention,mention', function(bot, message) {
+    bot.reply(message, 'Feilmeldingen "Link Error" i AutoLaser software skyldes at Com ikke er satt. Click "Search" på høyre side i Work-taben. Com resetter seg stadig vekk.');
+
+});
+
+controller.hears(['(.*)laserkutter(.*)steel\\?','(.*)laserkutter(.*)stål\\?','(.*)laser kutter(.*)steel\\?','(.*)laser kutter(.*)stål\\?'], 'ambient,direct_message,direct_mention,mention', function(bot, message) {
+    bot.reply(message, 'Bitrafs laserkutter tar ikke metall. CNC må brukes isteden.');
+
+});
+
+controller.hears(['(.*)kontorplasser\\?'], 'ambient,direct_message,direct_mention,mention', function(bot, message) {
+    bot.reply(message, 'Kontorplasser hos Bitraf: Hør med Thomas. For øyeblikket er alle kontorer opptatte.');
+
+});
+
+controller.hears(['galleri(.*)bitraf\\?','bitraf(.*)galleri\\?'], 'ambient,direct_message,direct_mention,mention', function(bot, message) {
+    bot.reply(message, 'Galleri på Biotraf.no: Send 1 bilde per mail til galleri@bitraf.no. Mailens topic blir brukt som undertekst til bildet. Bildet publiseres straks.');
+
+});
+
+controller.hears(['funker printer\\?','printer funker\\?','printeren funker\\?'], 'ambient,direct_message,direct_mention,mention', function(bot, message) {
+
+
+});
+
+controller.hears(['(.*)\\?'], 'direct_message,direct_mention,mention', function(bot, message) {
+    bot.reply(message, 'Spørsmålet ble ikke gjenkjent');
+});
 
 function formatUptime(uptime) {
     var unit = 'second';
