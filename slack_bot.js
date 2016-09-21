@@ -64,6 +64,7 @@ This bot demonstrates many of the core features of Botkit:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 
+
 if (!process.env.token) {
     console.log('Error: Specify token in environment');
     process.exit(1);
@@ -79,6 +80,32 @@ var controller = Botkit.slackbot({
 var bot = controller.spawn({
     token: process.env.token
 }).startRTM();
+
+function formatUptime(uptime) {
+    var unit = 'second';
+    if (uptime > 60) {
+        uptime = uptime / 60;
+        unit = 'minute';
+    }
+    if (uptime > 60) {
+        uptime = uptime / 60;
+        unit = 'hour';
+    }
+    if (uptime != 1) {
+        unit = unit + 's';
+    }
+
+    uptime = uptime + ' ' + unit;
+    return uptime;
+}
+
+// Ting å fikse:
+// Lagring av sitater per bruker
+//
+
+var fullTeamList = [];
+var fullChannelList = [];
+var channelList = [];
 
 
 controller.hears(['hello', 'hi'], 'direct_message,direct_mention,mention', function(bot, message) {
@@ -253,7 +280,8 @@ controller.hears(['hvordan går det?'],
 
 	    });
 
-controller.hears(['hva koster medlemsskap'], 'ambient,direct_message,direct_mention,mention', function(bot, message) {
+// channel BitRaf general, C03G9SFKR
+controller.hears(['hva koster medlemsskap', '(.*)koster medlemsskap(.*)'], 'ambient,direct_message,direct_mention,mention', function(bot, message) {
     bot.reply(message, 'Medlemsskap er ikke nødvendig for å være på Bitraf, men det vil gi deg egen elektronisk nøkkel. Medlemsskap i Bitraf koster 300 for støttemedlemmer og 500 for vanlige medlemmer :)');
 
 });
@@ -269,7 +297,7 @@ controller.hears(['hvordan(.*)lagringsplass(.*)\\?', '(.*)hvordan(.*)lagringspla
 });
 
 controller.hears(['bitraf(.*)bitraf24(.*)\\?','bitraf24(.*)bitraf(.*)\\?'], 'ambient,direct_message,direct_mention,mention', function(bot, message) {
-    bot.reply(message, 'Forskjellen på Bitraf og Bitraf24 i wifi: Jeg vet ikke, finn ut og sett inn svaret her');
+    bot.reply(message, 'Forskjellen på Bitraf og Bitraf24 i wifi: Bitraf er 5GHZ, Bitraf24 er 2.4GHZ');
 
 });
 
@@ -283,7 +311,7 @@ controller.hears(['(.*)laserkutter(.*)steel\\?','(.*)laserkutter(.*)stål\\?','(
 
 });
 
-controller.hears(['(.*)kontorplasser\\?'], 'ambient,direct_message,direct_mention,mention', function(bot, message) {
+controller.hears(['(.*)kontorplass\\?', '(.*)kontorplass(.*)\\?'], 'ambient,direct_message,direct_mention,mention', function(bot, message) {
     bot.reply(message, 'Kontorplasser hos Bitraf: Hør med Thomas. For øyeblikket er alle kontorer opptatte.');
 
 });
@@ -293,29 +321,92 @@ controller.hears(['galleri(.*)bitraf\\?','bitraf(.*)galleri\\?'], 'ambient,direc
 
 });
 
-controller.hears(['funker printer\\?','printer funker\\?','printeren funker\\?'], 'ambient,direct_message,direct_mention,mention', function(bot, message) {
-
+controller.hears(['funker printer\\?','printer funker\\?','printeren funker\\?','2d(.*)printer(.*)bitraf\\?','printer(.*)bitraf\\?'], 'ambient,direct_message,direct_mention,mention', function(bot, message) {
+    bot.reply(message, 'For øyeblikket er det ingen fungerende 2D-printer på BitRaf');
 
 });
 
-controller.hears(['(.*)\\?'], 'direct_message,direct_mention,mention', function(bot, message) {
-    bot.reply(message, 'Spørsmålet ble ikke gjenkjent');
+// Fallbackk for udefinerte spørsmål
+controller.hears(['(.*)lagringsplass(.*)\\?', '(.*)lagerplass(.*)\\?'], 'ambient,direct_message,direct_mention,mention', function(bot, message) {
+    bot.reply(message, 'Spørsmålet om lagringsplass ble dessverre ikke gjenkjent');
+
+});
+controller.hears(['(.*)cnc(.*)\\?'], 'ambient,direct_message,direct_mention,mention', function(bot, message) {
+    bot.reply(message, 'Spørsmålet om CNC ble dessverre ikke gjenkjent');
+
+});
+controller.hears(['(.*)laser(.*)\\?'], 'ambient,direct_message,direct_mention,mention', function(bot, message) {
+    bot.reply(message, 'Spørsmålet om laser ble dessverre ikke gjenkjent');
+
+});
+controller.hears(['(.*)printer(.*)\\?'], 'ambient,direct_message,direct_mention,mention', function(bot, message) {
+    bot.reply(message, 'Spørsmålet om printer ble dessverre ikke gjenkjent');
+
+});
+controller.hears(['(.*)galleri(.*)\\?'], 'ambient,direct_message,direct_mention,mention', function(bot, message) {
+    bot.reply(message, 'Spørsmålet om galleri ble dessverre ikke gjenkjent');
+
+});
+controller.hears(['(.*)bitraf(.*)\\?'], 'ambient,direct_message,direct_mention,mention', function(bot, message) {
+    bot.reply(message, 'Spørsmålet om bitraf ble dessverre ikke gjenkjent');
+
 });
 
-function formatUptime(uptime) {
-    var unit = 'second';
-    if (uptime > 60) {
-        uptime = uptime / 60;
-        unit = 'minute';
+// channel random, C03G9SFKV
+controller.hears(['Trolol'], 'ambient,direct_message,direct_mention,mention', function(bot, message) {
+    bot.reply(message, 'Trulul! '+message.channel);
+    if ( message.channel.indexOf("C2961L0U9") > 0){ // test
+	bot.reply(message, 'Trulul #1!');
+    } else if ( message.channel.indexOf("D28M8LFMX") > 0){ // faq-bot priv
+	bot.reply(message, 'Trulul #2!');
+    }  else if ( message.channel.indexOf("C03G9SFKV") > 0){ // random
+	bot.reply(message, 'Trulul #3!');
+    } else {
+	bot.reply(message, 'Fail!');
     }
-    if (uptime > 60) {
-        uptime = uptime / 60;
-        unit = 'hour';
-    }
-    if (uptime != 1) {
-        unit = unit + 's';
-    }
+});
 
-    uptime = uptime + ' ' + unit;
-    return uptime;
-}
+// channel test, C2961L0U9
+controller.hears(['(.*)\\?'], 'ambient,direct_message,direct_mention,mention', function(bot, message) {
+    bot.reply(message, 'Dumdidum? '+message.channel );
+    if ( message.channel.indexOf("C2961L0U9") > 0){//test
+	bot.reply(message, 'Dumdidum 1');
+    } else if ( message.channel.indexOf("C03G9SFKR") > 0){//general
+	//bot.reply(message, 'Spørsmålet ble ikke gjenkjent');
+    } else {//other
+	bot.reply(message, 'Dumdidum 2');
+    }
+});
+controller.hears(['(.*)\\!'], 'ambient,direct_message,direct_mention,mention', function(bot, message) {
+    bot.reply(message, 'Dumdidum! '+message.channel);
+    if ( message.channel.indexOf('C296') > 0){//test
+	bot.reply(message, 'Dumdidum 1!');
+    } else if ( message.channel.indexOf('C2961L0U9') > 0){//test
+	bot.reply(message, 'Dumdidum 2!');
+    } else {
+	bot.reply(message, 'Feil chan? '+message.channel+" C2961L0U9");
+    }
+});
+controller.hears(['abc'], 'ambient,direct_message,direct_mention,mention', function(bot, message) {
+    bot.reply(message, 'ABC! '+message.channel);
+    if ( message.channel.indexOf("C2961L0U9") > 0){//test
+	bot.reply(message, 'ABC!');
+    }
+});
+
+// channel faq-bot priv, D28M8LFMX!
+
+controller.hears(['kanal\\?'], 'ambient,direct_message,direct_mention,mention', function(bot, message) {
+
+    bot.reply(message, 'Denne kanalens ID er '+message.channel);
+
+});
+
+function printObject(o) {
+    var out = '';
+    for (var p in o) {
+      out += p + ': ' + o[p] + '\n';
+    }
+    return out;
+  }
+
