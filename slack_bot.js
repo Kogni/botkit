@@ -4,63 +4,36 @@
           \ \  __<   \ \ \/\ \  \/_/\ \/ \ \  _"-.  \ \ \  \/_/\ \/
            \ \_____\  \ \_____\    \ \_\  \ \_\ \_\  \ \_\    \ \_\
             \/_____/   \/_____/     \/_/   \/_/\/_/   \/_/     \/_/
-
-
 This is a sample Slack bot built with Botkit.
-
 This bot demonstrates many of the core features of Botkit:
-
 * Connect to Slack using the real time API
 * Receive messages based on "spoken" patterns
 * Reply to messages
 * Use the conversation system to ask questions
 * Use the built in storage system to store and retrieve information
   for a user.
-
 # RUN THE BOT:
-
   Get a Bot token from Slack:
-
     -> http://my.slack.com/services/new/bot
-
   Run your bot from the command line:
-
     token=<MY TOKEN> node slack_bot.js
-
 # USE THE BOT:
-
   Find your bot inside Slack to send it a direct message.
-
   Say: "Hello"
-
   The bot will reply "Hello!"
-
   Say: "who are you?"
-
   The bot will tell you its name, where it is running, and for how long.
-
   Say: "Call me <nickname>"
-
   Tell the bot your nickname. Now you are friends.
-
   Say: "who am I?"
-
   The bot will tell you your nickname, if it knows one for you.
-
   Say: "shutdown"
-
   The bot will ask if you are sure, and then shut itself down.
-
   Make sure to invite your bot into other channels using /invite @<my bot>!
-
 # EXTEND THE BOT:
-
   Botkit has many features for building cool and useful bots!
-
   Read all about it here:
-
     -> http://howdy.ai/botkit
-
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 
@@ -108,7 +81,7 @@ var fullChannelList = [];
 var channelList = [];
 
 
-controller.hears(['hello', 'hi'], 'direct_message,direct_mention,mention', function(bot, message) {
+controller.hears(['hello', 'hi', 'hei', 'hallo'], 'direct_message,direct_mention,mention', function(bot, message) {
 
     bot.api.reactions.add({
         timestamp: message.ts,
@@ -348,14 +321,14 @@ controller.hears(['(.*)galleri(.*)\\?'], 'ambient,direct_message,direct_mention,
 
 });
 controller.hears(['(.*)bitraf(.*)\\?'], 'ambient,direct_message,direct_mention,mention', function(bot, message) {
-    bot.reply(message, 'Spørsmålet om bitraf ble dessverre ikke gjenkjent');
+    //bot.reply(message, 'Spørsmålet om bitraf ble dessverre ikke gjenkjent'); //trigges altfor ofte
 
 });
 
 // channel random, C03G9SFKV
 controller.hears(['Trolol'], 'ambient,direct_message,direct_mention,mention', function(bot, message) {
-    bot.reply(message, 'Trulul! '+message.channel);
-    if ( message.channel.indexOf("C2961L0U9") > 0){ // test
+    bot.reply(message, 'Trulul! ');
+    /*if ( message.channel.indexOf("C2961L0U9") > 0){ // test
 	bot.reply(message, 'Trulul #1!');
     } else if ( message.channel.indexOf("D28M8LFMX") > 0){ // faq-bot priv
 	bot.reply(message, 'Trulul #2!');
@@ -363,28 +336,28 @@ controller.hears(['Trolol'], 'ambient,direct_message,direct_mention,mention', fu
 	bot.reply(message, 'Trulul #3!');
     } else {
 	bot.reply(message, 'Fail!');
-    }
+    }*/
 });
 
 // channel test, C2961L0U9
 controller.hears(['(.*)\\?'], 'ambient,direct_message,direct_mention,mention', function(bot, message) {
-    bot.reply(message, 'Dumdidum? '+message.channel );
+    //bot.reply(message, 'Dumdidum? '+message.channel );
     if ( message.channel.indexOf("C2961L0U9") > 0){//test
 	bot.reply(message, 'Dumdidum 1');
     } else if ( message.channel.indexOf("C03G9SFKR") > 0){//general
 	//bot.reply(message, 'Spørsmålet ble ikke gjenkjent');
     } else {//other
-	bot.reply(message, 'Dumdidum 2');
+	//bot.reply(message, 'Dumdidum 2');
     }
 });
 controller.hears(['(.*)\\!'], 'ambient,direct_message,direct_mention,mention', function(bot, message) {
-    bot.reply(message, 'Dumdidum! '+message.channel);
+    //bot.reply(message, 'Dumdidum! '+message.channel);
     if ( message.channel.indexOf('C296') > 0){//test
 	bot.reply(message, 'Dumdidum 1!');
     } else if ( message.channel.indexOf('C2961L0U9') > 0){//test
 	bot.reply(message, 'Dumdidum 2!');
     } else {
-	bot.reply(message, 'Feil chan? '+message.channel+" C2961L0U9");
+	//bot.reply(message, 'Feil chan? '+message.channel+" C2961L0U9");
     }
 });
 controller.hears(['abc'], 'ambient,direct_message,direct_mention,mention', function(bot, message) {
@@ -402,6 +375,11 @@ controller.hears(['kanal\\?'], 'ambient,direct_message,direct_mention,mention', 
 
 });
 
+controller.hears(['drop(.*)', 'quit'], 'direct_message,direct_mention,mention', function(bot, message) {
+
+    bot.reply(message, 'Fu! :(');
+});
+
 function printObject(o) {
     var out = '';
     for (var p in o) {
@@ -409,4 +387,3 @@ function printObject(o) {
     }
     return out;
   }
-
